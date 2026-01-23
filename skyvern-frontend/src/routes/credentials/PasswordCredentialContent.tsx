@@ -341,7 +341,7 @@ function PasswordCredentialContent({
                   </div>
                   <p className="text-sm text-slate-400">
                     <Link
-                      to="https://github.com/Musenn/finrpa-enterprise"
+                      to="https://github.com/Hllqkb/finrpa-enterprise"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="underline underline-offset-2"
@@ -350,7 +350,7 @@ function PasswordCredentialContent({
                     </Link>{" "}
                     {t("common.or")}{" "}
                     <Link
-                      to="https://github.com/Musenn/finrpa-enterprise"
+                      to="https://github.com/Hllqkb/finrpa-enterprise"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="underline underline-offset-2"

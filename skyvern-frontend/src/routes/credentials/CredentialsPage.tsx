@@ -152,7 +152,7 @@ function CredentialsPage() {
             </a>{" "}
             {t("credentials.bitwardenNote3")}{" "}
             <a
-              href="https://github.com/Musenn/finrpa-enterprise"
+              href="https://github.com/Hllqkb/finrpa-enterprise"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-400 underline hover:text-blue-300"

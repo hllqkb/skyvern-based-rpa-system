@@ -32,6 +32,35 @@ const server = createServer((request, response) => {
         destination: "/index.html",
       },
     ],
+    headers: [
+      {
+        source: "**/*.js",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/javascript",
+          },
+        ],
+      },
+      {
+        source: "**/*.mjs",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "application/javascript",
+          },
+        ],
+      },
+      {
+        source: "**/*.css",
+        headers: [
+          {
+            key: "Content-Type",
+            value: "text/css",
+          },
+        ],
+      },
+    ],
   });
 });
 

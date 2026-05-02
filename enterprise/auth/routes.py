@@ -49,7 +49,7 @@ async def list_enterprise_organizations() -> list[dict]:
 @router.post("/login", response_model=LoginResponse)
 async def login(request: LoginRequest) -> LoginResponse:
     """Authenticate an enterprise user and return a JWT with full permission context."""
-    from passlib.hash import bcrypt
+    import bcrypt as bcrypt_lib
 
     from .jwt_service import create_enterprise_token
 
@@ -75,7 +75,7 @@ async def login(request: LoginRequest) -> LoginResponse:
             )
 
         # Verify password
-        if not bcrypt.verify(request.password, user.password_hash):
+        if not bcrypt_lib.checkpw(request.password.encode('utf-8'), user.password_hash.encode('utf-8')):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid username or password",

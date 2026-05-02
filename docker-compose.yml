@@ -64,23 +64,14 @@ services:
     image: public.ecr.aws/skyvern/skyvern:latest
     restart: on-failure
     ports:
-      - "18000:8000"
-      - "16080:6080"
-      - "19222:9222"
+      - "28000:8000"
+      - "26080:6080"
+      - "29222:9222"
     volumes:
       - ./artifacts:/data/artifacts
       - ./videos:/data/videos
       - ./har:/data/har
       - ./log:/data/log
-      - ./skyvern/config.py:/app/skyvern/config.py:ro
-      - ./skyvern/forge/sdk/api/llm/models.py:/app/skyvern/forge/sdk/api/llm/models.py:ro
-      - ./skyvern/forge/sdk/api/llm/config_registry.py:/app/skyvern/forge/sdk/api/llm/config_registry.py:ro
-      - ./skyvern/forge/sdk/api/llm/api_handler_factory.py:/app/skyvern/forge/sdk/api/llm/api_handler_factory.py:ro
-      - ./skyvern/forge/api_app.py:/app/skyvern/forge/api_app.py:ro
-      - ./enterprise:/app/enterprise:ro
-      - ./alembic/env.py:/app/alembic/env.py:ro
-      - ./entrypoint-skyvern.sh:/app/entrypoint-skyvern.sh:ro
-      - ./scripts/ensure_enterprise_schema.py:/app/scripts/ensure_enterprise_schema.py:ro
     env_file:
       - .env
     environment:
@@ -101,14 +92,20 @@ services:
         condition: service_healthy
 
   # ============================================================
-  # FinRPA UI -- Web frontend (Docker image fallback)
+  # FinRPA UI -- Web frontend (local build)
   # ============================================================
   skyvern-ui:
-    image: public.ecr.aws/skyvern/skyvern-ui:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.ui
     restart: unless-stopped
     ports:
       - "18080:8080"
       - "19090:9090"
+    environment:
+      SKYVERN_API_URL: http://skyvern:8000
+      SKYVERN_WSS_URL: ws://skyvern:8000
+      SKYVERN_ARTIFACT_URL: http://skyvern:8000
     depends_on:
       skyvern:
         condition: service_healthy

@@ -26,7 +26,7 @@ async def authenticate_enterprise_token(token: str) -> Organization | None:
     except (JWTError, ValueError):
         return None
 
-    org = await forge_app.DATABASE.get_organization(
+    org = await forge_app.DATABASE.organizations.get_organization(
         organization_id=user_ctx.org_id,
     )
     return org

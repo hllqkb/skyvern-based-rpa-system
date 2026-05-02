@@ -21,9 +21,22 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from skyvern.forge.sdk.db import models
-import enterprise.auth.models  # noqa: F401 - register enterprise models with Base.metadata
 
 target_metadata = models.Base.metadata
+
+# Enterprise tables are managed by ensure_enterprise_schema.py, not by Alembic.
+# Exclude them from autogenerate comparison to avoid false "remove_table" detections.
+_ENTERPRISE_TABLES = {
+    "departments", "business_lines", "enterprise_users",
+    "user_department_roles", "user_business_lines",
+    "special_permissions", "task_extensions",
+}
+
+
+def _include_object(object, name, type_, reflected, compare_to):
+    if type_ == "table" and name in _ENTERPRISE_TABLES:
+        return False
+    return True
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -52,6 +65,7 @@ def run_migrations_offline() -> None:
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_object=_include_object,
     )
 
     with context.begin_transaction():
@@ -65,7 +79,11 @@ def do_run_migrations(connection: Connection):
     and associate a connection with the context.
 
     """
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(
+        connection=connection,
+        target_metadata=target_metadata,
+        include_object=_include_object,
+    )
     with context.begin_transaction():
         context.run_migrations()
 
